@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+	<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+</head>
+<body>
+  <h1>Tuya Settings</h1>
+	<fieldset>
+		<legend>Wifi credentials</legend>
+		<div class="field row">
+			<label for="ssid">SSID</label>
+			<input id="ssid" type="text" value="" />
+		</div>
+		<div class="field row">
+			<label for="password">Password</label>
+			<input id="password" type="password" value="" />
+		</div>
+	</fieldset>
+	<button id="save" class="left">Save</button>
+	
+	<script type="text/javascript">
+		function onHomeyReady(Homey) {
+			var ssidElement = document.getElementById('ssid');
+			var passwordElement = document.getElementById('password');
+			var saveElement = document.getElementById('save');
+
+			Homey.get('ssid', function (err, ssid) {
+				if (err) return Homey.alert(err);
+                ssidElement.value = ssid;
+			});
+
+			Homey.get('password', function (err, password) {
+				if (err) return Homey.alert(err);
+				passwordElement.value = password;
+			});
+
+        	saveElement.addEventListener('click', function (e) {
+				Homey.set('ssid', ssidElement.value, function (err) {
+					if (err) return Homey.alert(err);
+				});
+                Homey.set('password', passwordElement.value, function (err) {
+                    if (err) return Homey.alert(err);
+                });
+			});
+			
+			Homey.ready();	
+		}
+	</script>
+ </body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "id": "com.tuya",
+  "version": "0.0.3",
+  "compatibility": ">=1.5.0",
+  "author": {
+    "name": "Espen Ljosland",
+    "email": "espen@ljosland.com"
+  },
+  "sdk": 2,
+  "name": {
+    "en": "Tuya"
+  },
+  "description": {
+    "en": "Tuya integration"
+  },
+  "category": [
+    "energy"
+  ],
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "drivers": [
+    {
+      "id": "socket",
+      "name": {
+        "en": "Socket"
+      },
+      "mobile": {
+         "components": [
+             {
+                 "id": "icon",
+                 "capabilities": []
+             },
+           {
+             "id": "sensor",
+             "capabilities": [
+               "measure_power",
+               "measure_current",
+               "measure_voltage"
+             ]
+           },
+           {
+             "id": "toggle",
+             "capabilities": [
+               "onoff"
+             ]
+           }
+         ]
+      },
+      "capabilities": [
+        "onoff",
+        "measure_power",
+        "measure_current",
+        "measure_voltage"
+      ],
+      "capabilitiesOptions": {
+        "measure_current": {
+          "units": {
+            "en": "A"
+          }
+        }
+      },
+      "class": "socket",
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "choose_slave"
+          }
+        },
+        {
+          "id": "choose_slave",
+          "template": "choose_slave",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "large": "/drivers/socket/assets/images/large.png",
+        "small": "/drivers/socket/assets/images/small.png"
+      }
+    }
+  ]
+}
