@@ -30,7 +30,7 @@ class MyDevice extends Homey.Device {
 
 	startInterval() {
 	    const self = this;
-        this._tuya.resolveId()
+        this._tuya.find()
             .then((d) => {
                 this.log('Device resolved', d);
                 this.getTuyaData();
@@ -39,24 +39,32 @@ class MyDevice extends Homey.Device {
             .catch(e => {
                 this.log('Error in startInterval, retrying in 30 seconds', e);
                 setTimeout(self.startInterval.bind(self), Math.min(30, self._counter++ * 2) * 1000);
-            })
-        ;
+            });
+        this._tuya.on('error', error => {
+            this.log('Error!', error);
+            this.setUnavailable("Something went wrong");
+        });
+
     }
 
-    getTuyaData() {
-        this._tuya.get({schema: true}).then(status => {
-            console.log('Status:', status);
-            if(status.dps['1'] !== undefined) {
-                this.setCapabilityValue("onoff", status.dps['1']).catch((e) => this.error('onoff', e));
-                this.setCapabilityValue("measure_current", Number(status.dps['4'] || status.dps['18'] || 0) / 1000).catch((e) => this.error('measure_current', e));
-                this.setCapabilityValue("measure_power", Number(status.dps['5'] || status.dps['19'] || 0) / 10).catch((e) => this.error('measure_power', e));
-                this.setCapabilityValue("measure_voltage", Number(status.dps['6'] || status.dps['20'] || 0) / 10).catch((e) => this.error('measure_voltage', e));
-                this.setAvailable();
-            }
-        }).catch(e => {
-            this.error('Failed to get data', e);
-            this.setUnavailable("Could not reach device");
-        });
+    getTuyaData()
+    {
+        this._tuya.connect()
+            .then(()=>{
+                this._tuya.get({schema: true}).then(status => {
+                    console.log('Status:', status);
+                    if (status.dps['1'] !== undefined) {
+                        this.setCapabilityValue("onoff", status.dps['1']).catch((e) => this.error('onoff', e));
+                        this.setCapabilityValue("measure_current", Number(status.dps['4'] || status.dps['18'] || 0) / 1000).catch((e) => this.error('measure_current', e));
+                        this.setCapabilityValue("measure_power", Number(status.dps['5'] || status.dps['19'] || 0) / 10).catch((e) => this.error('measure_power', e));
+                        this.setCapabilityValue("measure_voltage", Number(status.dps['6'] || status.dps['20'] || 0) / 10).catch((e) => this.error('measure_voltage', e));
+                        this.setAvailable();
+                    }
+                }).catch(e => {
+                    this.error('Failed to get data', e);
+                    this.setUnavailable("Could not reach device");
+                });
+            })
 
 
         // 1 = state
