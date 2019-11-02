@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@tuyapi/link": "^0.2.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "tuyapi": "^3.0.2"
   }
 }
